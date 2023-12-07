@@ -63,7 +63,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/textEmail"
+                android:id="@+id/TextEmail"
                 android:layout_width="294dp"
                 android:layout_height="58dp"
                 android:layout_margin="16dp"
