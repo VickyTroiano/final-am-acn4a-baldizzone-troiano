@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="orange_1">#E9AB4D</color>
     <color name="orange_2">#FFEDD2</color>
+    <color name="orange_3">#E48D0A</color>
     <color name="bg_recepediapp">#FFEDD2</color>
 </resources>
