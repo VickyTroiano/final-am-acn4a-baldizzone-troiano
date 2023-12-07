@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">RecepediApp</string>
+    <string name="welcome_login">¡Bienvenid@!</string>
+    <string name="email_lbl">Email</string>
+    <string name="pass_lbl">Contraseña</string>
+    <string name="headerText">¿Qué vamos a cocinar hoy?</string>
+    <string name="subtitleText">Listado de Recetas</string>
+    <string name="scrollDescription">Contenedor de imágenes desplazables</string>
+    <string name="headlinetext">Receta:</string>
+    <string name="nameItem">Receta:</string>
+</resources>
