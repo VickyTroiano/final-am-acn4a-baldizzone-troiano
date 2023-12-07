@@ -155,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void reload() {
-        // Lógica para recargar la interfaz de usuario cuando el usuario está autenticado
+    public void logout(View v){
+        mAuth.signOut();
 
     }
 }
