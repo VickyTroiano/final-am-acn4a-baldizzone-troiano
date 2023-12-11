@@ -19,26 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
-    public void signIn(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "createUserWithEmail:success");
-                            
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
-    }
 
     public void login(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
@@ -87,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("Login email", emailString);
         Log.i("Login password", passwordString);
 
-        //this.login(emailString, passwordString);
-        this.signIn(emailString, passwordString);
+        this.login(emailString, passwordString);
+
     }
 }

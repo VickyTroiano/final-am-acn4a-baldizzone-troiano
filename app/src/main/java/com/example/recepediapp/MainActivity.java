@@ -21,9 +21,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
@@ -141,11 +147,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        TextView textViewWelcome2 = findViewById(R.id.textViewWelcome2);
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
+
+            //obtengo el uid de firestore
+            this.uid = currentUser.getUid();
+
             String email = currentUser.getEmail();
+            Boolean verificado = currentUser.isEmailVerified();
             Log.i("firebase email", email);
+            String mensaje = "Hola, tu email es: \n" + email;
+            if (verificado) {
+                mensaje += "\n y esta verificado";
+                this.db.collection("users").whereEqualTo("uid", uid)
+                        .get()
+                        .addOnCompleteListener(
+                        new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String id = document.getId();
+                                        db.collection("users").document(id)
+                                                .update("verified", true);
+
+                                        Log.d("TAG", document.getId() + " => " + document.getData());
+                                    }
+                                }
+                            }
+                        }
+                );
+            } else {
+                mensaje += "\n y no esta verificado";
+                currentUser.sendEmailVerification();
+            }
+            textViewWelcome2.setText(mensaje);
         } else {
             Log.i("firebase", "NO hay un usuario. Hay que loguearse");
             //redireccion al login activity
@@ -157,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void logout(View v){
         mAuth.signOut();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
 
     }
 }
