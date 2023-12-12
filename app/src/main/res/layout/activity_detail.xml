@@ -94,8 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="Se prepara de la siguiente manera..." />
+                    android:layout_marginLeft="10dp" />
 
                 <Button
                     android:id="@+id/buttonBack"

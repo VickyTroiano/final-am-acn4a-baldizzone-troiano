@@ -14,21 +14,24 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
+import com.squareup.picasso.Picasso;
+
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,109 +42,131 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
 
         GridLayout gridLayout = findViewById(R.id.gridLayout);
 
-        int[] images = {
-                R.drawable.empanada,
-                R.drawable.pasta,
-                R.drawable.arrollado,
-                R.drawable.guacamole,
-                R.drawable.omellette,
-                R.drawable.panqueque,
-                R.drawable.guiso,
-                R.drawable.desayuno,
-                R.drawable.cheesecake,
-                R.drawable.papas
-        };
+        //obtengo todas las recetas
+        db.collection("recetas")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String nombre = document.getString("nombre");
+                                String img = document.getString("img");
+                                String procedure = document.getString("procedure");
 
-        String[] titles = {
-                "Empanada",
-                "Pasta",
-                "Arrollado",
-                "Guacamole",
-                "Omellette",
-                "Panqueque",
-                "Guiso",
-                "Desayuno",
-                "Cheesecake",
-                "Papas"
-        };
+                                Log.d("TAG", "Document ID: " + document.getId());
 
-        // Creo un image view por cada imagen iterada y le agrego la imagen
-        for (int i = 0; i < images.length; i++) {
-            // Contenedor para cada imagen
-            LinearLayout container = new LinearLayout(this);
-            container.setOrientation(LinearLayout.VERTICAL);
+                                // Agrega registros de depuración
+                                Log.d("TAG", "Nombre: " + nombre);
+                                Log.d("TAG", "Imagen: " + img);
+                                Log.d("TAG", "Procedure: " + procedure);
 
-            ImageView imageView = new ImageView(this);
-            imageView.setImageResource(images[i]);
+                                // Verificar si las cadenas son nulas o vacías
+                                if (nombre != null && !nombre.trim().isEmpty() &&
+                                        img != null && !img.trim().isEmpty() &&
+                                        procedure != null && !procedure.trim().isEmpty()) {
+                                    // Continuar con el procesamiento
+                                    String[] imgArray = img.split(",");
+                                    String[] nombresArray = nombre.split(",");
+                                    String[] procedimientosArray = procedure.split(",");
 
-            // Obtengo el nombre de la imagen
-            String imageName = getResources().getResourceEntryName(images[i]);
-            imageView.setContentDescription("Imagen de" + imageName);
+                                    //Recorro las imagenes
+                                    for (int i = 0; i < imgArray.length; i++) {
 
-            // Personalizamos en gridlayout
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 500;
-            params.height = 500;
-            params.setMargins(8, 8, 8, 8);
-            imageView.setLayoutParams(params);
+                                        // Obtener referencia al archivo en Firebase Storage
+                                        String imageUrl = imgArray[i].trim();
 
-            // Título de cada comida
-            TextView textView = new TextView(this);
-            textView.setText(titles[i]);
+                                        // Contenedor para cada imagen
+                                        LinearLayout container = new LinearLayout(MainActivity.this);
+                                        container.setOrientation(LinearLayout.VERTICAL);
 
-            // Cargar la fuente personalizada desde la carpeta res/font
-            Typeface typeface = ResourcesCompat.getFont(this, R.font.lato_bold_italic);
-            textView.setTypeface(typeface, Typeface.BOLD);
-            textView.setTextSize(22);
-            int textColor = getResources().getColor(R.color.black);
-            textView.setTextColor(textColor);
+                                        //uso de la libreria Picasso para cargar las imagenes desde la url
+                                        ImageView imageView = new ImageView(MainActivity.this);
+                                        // Descargar la imagen y cargarla en la ImageView
+                                        Picasso.get().load(imageUrl).into(imageView);
 
-            textView.setPadding(0, 0, 0, 8);
 
-            // Boton
-            Button buttonOpen = new Button(this);
-            // Aplicar el fondo redondeado
-            buttonOpen.setBackgroundResource(R.drawable.boton_redondeado);
-            buttonOpen.setId(i);
+                                        imageView.setContentDescription("Imagen de" + nombresArray[i]);
 
-            buttonOpen.setText("Ver receta");
+                                        // Personalizamos en gridlayout
+                                        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                                        params.width = 500;
+                                        params.height = 500;
+                                        params.setMargins(8, 8, 8, 8);
+                                        imageView.setLayoutParams(params);
 
-            // LinearLayout para el botón
-            LinearLayout buttonContainer = new LinearLayout(this);
-            LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            paramsBtn.setMargins(5, 0, 5, 20);
-            paramsBtn.width = 200;
+                                        // Título de cada comida
+                                        TextView textView = new TextView(MainActivity.this);
+                                        textView.setText(nombresArray[i]);
 
-            buttonOpen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int buttonId = buttonOpen.getId();
-                    String imageName = titles[buttonId];
-                    int imageId = images[buttonId];
+                                        // Cargar la fuente personalizada desde la carpeta res/font
+                                        Typeface typeface = ResourcesCompat.getFont(MainActivity.this, R.font.lato_bold_italic);
+                                        textView.setTypeface(typeface, Typeface.BOLD);
+                                        textView.setTextSize(22);
+                                        int textColor = getResources().getColor(R.color.black);
+                                        textView.setTextColor(textColor);
 
-                    // Iniciar la nueva actividad y enviar datos
-                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                    intent.putExtra("image_id", imageId);
-                    intent.putExtra("image_name", imageName);
-                    startActivity(intent);
-                }
-            });
+                                        textView.setPadding(0, 0, 0, 8);
 
-            // Agregar la imagen y el texto al contenedor lineal
-            container.addView(imageView);
-            container.addView(textView);
-            container.addView(buttonOpen, paramsBtn);
+                                        // Boton
+                                        Button buttonOpen = new Button(MainActivity.this);
+                                        // Aplicar el fondo redondeado
+                                        buttonOpen.setBackgroundResource(R.drawable.boton_redondeado);
+                                        buttonOpen.setId(i);
 
-            // Agregar el contenedor al GridLayout
-            gridLayout.addView(container);
-        }
+                                        buttonOpen.setText("Ver receta");
+
+                                        // LinearLayout para el botón
+                                        LinearLayout buttonContainer = new LinearLayout(MainActivity.this);
+                                        LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                                        );
+                                        paramsBtn.setMargins(5, 0, 5, 20);
+                                        paramsBtn.width = 200;
+
+                                        buttonOpen.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                int buttonId = buttonOpen.getId();
+                                                String imageName = nombresArray[buttonId];
+                                                String imageId = imgArray[buttonId];
+                                                String imageProcedure = procedimientosArray[buttonId];
+
+                                                // Iniciar la nueva actividad y enviar datos
+                                                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                                                intent.putExtra("image_id", imageId);
+                                                intent.putExtra("image_name", imageName);
+                                                intent.putExtra("image_procedure", imageProcedure);
+                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        // Agregar la imagen y el texto al contenedor lineal
+                                        container.addView(imageView);
+                                        container.addView(textView);
+                                        container.addView(buttonOpen, paramsBtn);
+
+                                        // Agregar el contenedor al GridLayout
+                                        gridLayout.addView(container);
+                                    }
+                                }else{
+                                    Log.e("TAG", "Alguna cadena es nula para el documento: " + document.getId());
+                                    }
+                                }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+
     }
 
     @Override
@@ -154,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null){
 
             //obtengo el uid de firestore
-            this.uid = currentUser.getUid();
+            String uid = currentUser.getUid();
 
             String email = currentUser.getEmail();
             Boolean verificado = currentUser.isEmailVerified();
