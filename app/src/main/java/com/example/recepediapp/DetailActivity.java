@@ -1,8 +1,12 @@
 package com.example.recepediapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +34,9 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.get().load(imageId).into(imageViewItem);
         nameItemText.setText(imageName);
         preparationText.setText(imageProcedure);
+        Log.i("DetailActivity", "Preparacion completa: " + imageProcedure);
+        preparationText.setText(HtmlCompat.fromHtml(imageProcedure, HtmlCompat.FROM_HTML_MODE_LEGACY));
+
 
         Button buttonBack = findViewById(R.id.buttonBack);
         buttonBack.setText("Volver");

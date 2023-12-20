@@ -6,9 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".DetailActivity">
 
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,15 +91,51 @@
                         android:text="Preparación:"
                         android:textColor="#000000"
                         android:textSize="20sp" />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/preparationText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:inputType="textMultiLine"
+                            android:maxLines="1000"
+                            android:minHeight="48dp"
+                            android:scrollbars="vertical"
+                            android:text="Este es el procedimiento"
+                            android:textColor="#1B1414"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textSamplee"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:inputType="textMultiLine"
+                            android:maxLines="1000"
+
+                            android:scrollbars="vertical"
+                            android:text="Ingredientes:  Para la base:  200 g de galletas (pueden ser de vainilla, tipo Graham, o incluso de chocolate) 100 g de mantequilla derretida Para el relleno:  750 g de queso crema a temperatura ambiente 200 g de azúcar 4 huevos 1 cucharadita de extracto de vainilla 1/2 taza de crema agria 2 cucharadas de harina común Ralladura de 1 limón (opcional) Instrucciones:  Paso 1: Preparar la base  Precalienta el horno a 160°C. Tritura las galletas en un procesador de alimentos o colócalas en una bolsa y aplástalas con un rodillo. Mezcla las migajas de galleta con la mantequilla derretida hasta obtener una mezcla homogénea. Presiona la mezcla de galleta en la base de un molde para tarta desmontable, asegurándote de cubrir uniformemente el fondo. Hornea la base durante 10 minutos y luego déjala enfriar mientras preparas el relleno. Paso 2: Preparar el relleno  En un tazón grande, bate el queso crema con una batidora eléctrica hasta que esté suave y cremoso. Agrega el azúcar y continúa batiendo hasta que se mezcle bien. Añade los huevos uno a uno, batiendo bien después de cada adición. Agrega la crema agria, el extracto de vainilla y la harina. Mezcla hasta que todos los ingredientes estén bien combinados. Si decides usar ralladura de limón, agrégala al relleno y mezcla suavemente. Paso 3: Hornear la cheesecake  Vierte la mezcla de queso crema sobre la base de galleta en el molde. Hornea la tarta en el horno precalentado durante aproximadamente 45-50 minutos o hasta que los bordes estén firmes pero el centro aún se tambalee un poco. Apaga el horno y deja la cheesecake dentro con la puerta entreabierta durante 1 hora para evitar grietas. Saca la tarta del horno y refrigérala durante al menos 4 horas o idealmente durante toda la noche antes de desmoldarla. Paso 4: Decorar y servir  Desmonta cuidadosamente el molde para tarta. Puedes decorar la cheesecake con frutas frescas, salsa de frutas o simplemente espolvorear un poco de azúcar glas sobre la parte superior antes de servir."
+                            android:textColor="#FF5722" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/preparationText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp" />
 
                 <Button
                     android:id="@+id/buttonBack"
